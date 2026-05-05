@@ -1,5 +1,5 @@
 import yfinance as yf
-from sanitizar import sanitizar
+from utils.sanitizar import sanitizar
 
 # Diccionario con las empresas y sus acciones
 COMPANY_TICKERS = {
