@@ -1,56 +1,72 @@
 import re
+import sys
+from funciones_agente.obtener_precio_accion import obtener_precio_accion
+from funciones_agente.obtener_clima import obtener_clima
+from utils.sanitizar import sanitizar
 
 def chatbot():
-    print("*** Chatbot v1.0.0 Iniciando ***")
-    print("Hola soy el chatbot v1.0.0, Puedo ayudarte a obtener información sobre precios de acciones y clima de ciudades")
-    print("¿Qué quieres saber hoy?")
+    """
+    Función principal que inicia el chatbot interactivo por consola.
+    Maneja el ciclo de vida del chat, recibe el input del usuario y 
+    determina qué acción realizar basándose en expresiones regulares.
+    """
+    print("*** Chatbot v1.0.0***")
+    print("Hola, soy el Chatbot v1.0.0. Puedo ayudarte a obtener precios de acciones o indicarte")
+    print("la temperatura actual en cualquier ciudad del mundo.")
+    print("Me puedes hacer preguntas, por ejemplo ¿cuál es el precio de una acción de Microsoft?")
+    print("¿cuál es la temperatura actual en la Ciudad de México?\n")
 
-    # Ciclo infinito para mantener el chatbot corriendo
+    # Ciclo infinito para mantener el chat activo hasta que el usuario decida salir
     while True:
         try:
-            user_input = input("-->").strip()
+            # Obtener y limpiar espacios en blanco del input del usuario
+            user_input = input("--> ").strip()
             if not user_input:
                 continue
-
-            # Validar una peticion de salida
-            if user_input.lower() in ["salir", "adiós", "chao", "bye", "exit"]:
-                print("Chatbot: ¡Hasta luego!")
+            
+            # Comprobar si el usuario desea finalizar la conversación
+            if user_input.lower() in ["salir", "exit", "quit", "adiós", "adios"]:
+                print(">>> ¡Hasta luego!")
                 break
-            # Reglas para detectar intencion de preguntas por acciones
 
-            stock_match = re.search(r"(?:precio|stock|accion|acción)\s+(?:de\s, de la|de las)\s+(\w+)", user_input, re.IGNORECASE)
+            # Reglas para detectar intención de precio de acción (mejoradas)
+            # Soporta frases como: "precio de apple", "accion de tesla", "stock de microsoft", etc.
+            stock_match = re.search(r"(?:precio|stock|acción|accion)\s+(?:de\s+)?(?:la\s+|el\s+)?(?:acción\s+|accion\s+)?(?:de\s+)?([\w\s]+)", user_input, re.IGNORECASE)
+            
+            # Reglas para detectar intención de clima (mejoradas: 'en/de' ahora es opcional)
+            # Soporta frases como: "clima oaxaca", "temperatura en monterrey", "tiempo de miami", etc.
+            weather_match = re.search(r"(?:temperatura|clima|tiempo)\s+(?:(?:en|de)\s+)?([\w\s?]+)", user_input, re.IGNORECASE)
 
-            # Reglas para detectar intencion de preguntas por clima
-            weather_match = re.search(r"(?:clima|tiempo)\s+(?:en|de)\s+(\w+)", user_input, re.IGNORECASE)
-
-            #Caso 1: El usuario pregunta por acciones
+            # Caso 1: El usuario pregunta por acciones
             if stock_match:
-                # Debemos esperar si el usario indica alguna accion
+                # El agente espera (driver, user_input). Pasamos None como driver en esta versión simple.
                 price = obtener_precio_accion(None, user_input)
                 if price:
-                    print(f">> {price}")
+                    print(f">>> {price}")
                 else:
-                    print("Chatbot: No pude obtener el precio, ¿podrías intentar con otra acción?")
-
-            # Caso 2: El usuario pregunta por clima
-            if weather_match:
-                temp = obtener_temperatura(None, user_input)
+                    print(">>> Lo siento, no pude encontrar el precio de la acción.")
+            
+            # Caso 2: El usuario pregunta por el clima
+            elif weather_match:
+                # El agente espera (driver, user_input)
+                temp = obtener_clima(None, user_input)
                 if temp:
-                    print(f">> {temp}")
+                    print(f">>> {temp}")
                 else:
-                    print("Chatbot: No pude obtener la temperatura, ¿podrías intentar con otra ciudad?")
-
-            # Caso 3: El usuario no ejecuta alguna peticion 
+                    print(">>> Lo siento, no pude obtener el clima.")
+            
+            # Caso 3: No se detecta ninguna intención conocida
             else:
-                print("Chatbot: No entendí tu petición. ¿Podrías replantearla?")
+                print(">>> No estoy seguro de cómo ayudarte con eso. Prueba preguntando por el precio de una acción o el clima en una ciudad.")
 
         except KeyboardInterrupt:
-            # Comando de salida Ctrl + C | Cmd + C
-            print("\nChatbot: Hasta luego, fue un placer ayudarte")
+            # Capturar Ctrl+C para salir elegantemente
+            print("\n>>> ¡Hasta luego!")
+            break
+        except Exception as e:
+            # Capturar cualquier otro error inesperado para evitar que el programa se cierre
+            print(f">>> Ocurrió un error: {e}")
 
-
-
-
-
-
-            
+# Punto de entrada principal del script
+if __name__ == "__main__":
+    chatbot()
