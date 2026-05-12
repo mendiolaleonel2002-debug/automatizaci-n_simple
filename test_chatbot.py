@@ -13,6 +13,5 @@ def test_chatbot():
     print(f"Resultado Microsoft: {msft_price}")
 
 
-
 if __name__ == "__main__":
     test_chatbot()
