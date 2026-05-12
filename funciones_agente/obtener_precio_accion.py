@@ -1,3 +1,4 @@
+# Módulo para consultar precios de acciones en tiempo real usando yfinance
 import yfinance as yf
 from utils.sanitizar import sanitizar
 

@@ -1,3 +1,4 @@
+# Módulo encargado de la integración con servicios meteorológicos externos
 import requests
 
 def obtener_clima(driver, user_input):

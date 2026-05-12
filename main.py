@@ -1,7 +1,9 @@
 import re
 import sys
+# Importamos las funciones de lógica de negocio desde nuestro paquete de funciones
 from funciones_agente.obtener_precio_accion import obtener_precio_accion
 from funciones_agente.obtener_clima import obtener_clima
+# Importamos utilidades para limpiar el texto del usuario
 from utils.sanitizar import sanitizar
 
 def chatbot():
@@ -30,11 +32,11 @@ def chatbot():
                 break
 
             # Reglas para detectar intención de precio de acción (mejoradas)
-            # Soporta frases como: "precio de apple", "accion de tesla", "stock de microsoft", etc.
+            # Buscamos patrones como "precio de apple", "accion de tesla", etc.
             stock_match = re.search(r"(?:precio|stock|acción|accion)\s+(?:de\s+)?(?:la\s+|el\s+)?(?:acción\s+|accion\s+)?(?:de\s+)?([\w\s]+)", user_input, re.IGNORECASE)
             
-            # Reglas para detectar intención de clima (mejoradas: 'en/de' ahora es opcional)
-            # Soporta frases como: "clima oaxaca", "temperatura en monterrey", "tiempo de miami", etc.
+            # Reglas para detectar intención de clima
+            # Buscamos patrones como "clima en oaxaca", "temperatura de madrid", etc.
             weather_match = re.search(r"(?:temperatura|clima|tiempo)\s+(?:(?:en|de)\s+)?([\w\s?]+)", user_input, re.IGNORECASE)
 
             # Caso 1: El usuario pregunta por acciones

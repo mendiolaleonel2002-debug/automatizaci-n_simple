@@ -1,3 +1,4 @@
+# Utilidades para el pre-procesamiento y limpieza de texto
 def sanitizar(name):
     """
     Limpia y normaliza el input del usuario eliminando artículos, preposiciones y palabras clave 
