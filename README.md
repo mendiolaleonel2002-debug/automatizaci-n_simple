@@ -44,7 +44,6 @@ Para transformar este prototipo en un sistema de grado de producción, se recomi
     *   `traduccion_texto`: Traducción rápida entre idiomas.
 2.  **Mejoras de Selenium**: Implementar búsquedas visuales en sitios que no tienen API pública.
 3.  **Seguridad**: Añadir manejo de variables de entorno (`.env`) para claves de API sensibles.
-4.  **Dockerización**: Crear un `Dockerfile` para asegurar que el entorno (incluyendo Chrome y ChromeDriver) sea consistente en cualquier máquina.
 
 ---
 
