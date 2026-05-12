@@ -6,6 +6,29 @@ Este proyecto es una herramienta de automatización modular escrita en Python qu
 
 El proyecto sigue un diseño **modular y basado en intenciones**, lo que facilita la adición de nuevas funcionalidades sin afectar el núcleo del sistema.
 
+```mermaid
+graph TD
+    User([Usuario]) --> Input[/Consulta de Texto/]
+    Input --> Entry{Punto de Entrada}
+    Entry -- main.py --> Regex[Detección por Regex]
+    Entry -- agente_selenium.py --> Selenium[Instancia Selenium]
+    
+    Regex --> Sani[Sanitización utils/sanitizar.py]
+    Selenium --> Sani
+    
+    Sani --> Dispatcher{Selector de Función}
+    
+    Dispatcher -- "Clima" --> Weather[funciones_agente/obtener_clima.py]
+    Dispatcher -- "Acciones" --> Stocks[funciones_agente/obtener_precio_accion.py]
+    
+    Weather --> WAPI[API wttr.in]
+    Stocks --> SAPI[API yfinance]
+    
+    WAPI --> Output[/Respuesta Final/]
+    SAPI --> Output
+    Output --> User
+```
+
 ### Estructura de Carpetas
 - `main.py`: Punto de entrada principal para una interacción rápida por consola (Regex-based).
 - `agente_selenium.py`: Asistente avanzado que utiliza **Selenium** para tareas que podrían requerir automatización del navegador.
