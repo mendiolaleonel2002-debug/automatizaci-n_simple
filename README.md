@@ -29,21 +29,37 @@ graph TD
     Output --> User
 ```
 
-### Estructura de Carpetas
-- `main.py`: Punto de entrada principal para una interacción rápida por consola (Regex-based).
-- `agente_selenium.py`: Asistente avanzado que utiliza **Selenium** para tareas que podrían requerir automatización del navegador.
-- `funciones_agente/`: Directorio que contiene los "cerebros" del agente. Cada archivo es un módulo independiente para una tarea específica.
-  - `obtener_clima.py`: Integración con la API de `wttr.in`.
-  - `obtener_precio_accion.py`: Integración con `yfinance`.
-- `utils/`: Utilidades comunes para el procesamiento de datos.
-  - `sanitizar.py`: Lógica para limpiar el lenguaje natural y extraer entidades clave.
+### Estructura del Proyecto
+
+```text
+automatizacion_simple/
+├── agente_selenium.py      # Agente avanzado con Selenium
+├── main.py                 # Chatbot básico por consola (Regex)
+├── test_chatbot.py         # Scripts de prueba y validación
+├── funciones_agente/       # Directorio de habilidades (Módulos)
+│   ├── __init__.py
+│   ├── obtener_clima.py    # Lógica de clima
+│   └── obtener_precio_accion.py # Lógica de finanzas
+├── utils/                  # Utilidades transversales
+│   └── sanitizar.py        # Limpieza de lenguaje natural
+├── .gitignore              # Archivos omitidos por Git
+└── README.md               # Documentación general
+```
+
+### Detalles de la Arquitectura
+
+La arquitectura de este proyecto se basa en tres principios fundamentales:
+
+1.  **Modularidad (Habilidades Independientes)**: Cada función del agente (clima, acciones) reside en su propio archivo dentro de `funciones_agente/`. Esto permite desarrollar, probar y depurar cada habilidad de forma aislada sin riesgo de romper el resto del sistema.
+2.  **Desacoplamiento del Frontend**: La lógica de negocio no depende de cómo se interactúa con el usuario. El mismo "cerebro" (`obtener_clima`) puede ser invocado desde una consola simple (`main.py`) o desde un navegador automatizado (`agente_selenium.py`).
+3.  **Sanitización Centralizada**: El uso de un módulo de utilidades (`utils/`) asegura que el procesamiento de lenguaje natural sea consistente en todos los puntos de entrada, permitiendo que el sistema entienda variaciones de la misma pregunta.
 
 ### Flujo de Ejecución
 1. **Entrada**: El usuario escribe una consulta (ej: "¿Cuál es el precio de Apple?").
 2. **Detección de Intención**: El sistema identifica si se trata de clima, acciones o comandos de salida.
 3. **Procesamiento (Sanitización)**: Se extrae la entidad relevante ("Apple") eliminando el ruido del lenguaje.
-4. **Ejecución de Función**: Se invoca el módulo correspondiente.
-5. **Respuesta**: Se devuelve el resultado al usuario.
+4. **Ejecución de Función**: Se invoca el módulo correspondiente pasándole el driver (si aplica) y el parámetro limpio.
+5. **Respuesta**: Se devuelve el resultado formateado al usuario.
 
 ---
 
